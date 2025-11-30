@@ -29,6 +29,10 @@
             </div>
             <div class="step" data-step="4">
                 <div class="step-number">4</div>
+                <div class="step-label">穴道小測驗</div>
+            </div>
+            <div class="step" data-step="5">
+                <div class="step-number">5</div>
                 <div class="step-label">行動計畫</div>
             </div>
         </div>
@@ -414,12 +418,34 @@
         <div id="step3" class="form-step">
             <div id="results"></div>
             <div class="button-group">
-                <button id="btn-step3-next" class="btn-primary">下一步：制定行動計畫 →</button>
+                <button id="btn-step3-next" class="btn-primary">開始穴道小測驗 →</button>
             </div>
         </div>
 
-        <!-- 第四步：後設認知反思與行動計畫 -->
+        <!-- 第四步：穴道小測驗 -->
         <div id="step4" class="form-step">
+            <h2>🧠 穴道小測驗</h2>
+            <p class="instruction">請點擊左側的穴道名稱，再點擊右側對應的功能，將它們正確配對起來吧！</p>
+            
+            <div id="quiz-container" class="quiz-container">
+                <div id="quiz-names" class="quiz-column">
+                    <!-- Names will be populated by script.js -->
+                </div>
+                <div id="quiz-functions" class="quiz-column">
+                    <!-- Functions will be populated by script.js -->
+                </div>
+            </div>
+
+            <div id="quiz-status" class="quiz-status"></div>
+
+            <div class="button-group">
+                <button id="btn-step4-prev" class="btn-secondary">← 返回報告</button>
+                <button id="btn-step4-next" class="btn-primary" disabled>下一步：制定行動計畫 →</button>
+            </div>
+        </div>
+
+        <!-- 第五步：後設認知反思與行動計畫 -->
+        <div id="step5" class="form-step">
             <h2>🎯 後設認知反思與行動計畫</h2>
 
             <div class="reflection-section">
@@ -490,13 +516,13 @@
             </div>
 
             <div class="button-group">
-                <button id="btn-step4-prev" class="btn-secondary">← 上一步</button>
+                <button id="btn-step5-prev" class="btn-secondary">← 上一步</button>
                 <button id="btn-complete" class="btn-primary">完成並前往提交頁面 📄</button>
             </div>
         </div>
 
         <!-- 完成頁面 -->
-        <div id="step5" class="form-step">
+        <div id="step6" class="form-step">
             <div class="completion-screen">
                 <div class="success-icon">✅</div>
                 <h2>恭喜完成評估！</h2>
@@ -536,7 +562,7 @@
         </div>
 
         <!-- 兩週後檢視頁面 -->
-        <div id="step6" class="form-step">
+        <div id="step7" class="form-step">
             <h2>🔍 兩週後的成果檢視</h2>
 
             <div id="previousReport"></div>

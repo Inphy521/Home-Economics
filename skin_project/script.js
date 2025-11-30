@@ -64,15 +64,20 @@ let fullData = {
     skinAssessment: {},
     lifestyle: {},
     analysisResult: {},
+    quizResult: { // 新增：儲存測驗結果
+        attempts: 0,
+        completed: false
+    },
     actionPlan: {},
     twoWeekReview: {}
 };
 
 // 步驟切換功能
 function nextStep(step) {
+    // 驗證邏輯
     if (step === 2 && !validateStep1()) return;
-    if (step === 5 && !saveActionPlanData()) return;
 
+    // 處理頁面切換
     document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
 
@@ -80,6 +85,11 @@ function nextStep(step) {
     const stepElement = document.querySelector(`.step[data-step="${step}"]`);
     if (stepElement) {
         stepElement.classList.add('active');
+    }
+    
+    // 如果進入測驗步驟，則初始化測驗
+    if (step === 4) {
+        initializeQuiz();
     }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -89,7 +99,7 @@ function prevStep(step) {
     nextStep(step);
 }
 
-// 驗證步驟1
+// 驗證步驟1 (維持不變)
 function validateStep1() {
     const className = document.getElementById('className').value.trim();
     const seatNumber = document.getElementById('seatNumber').value.trim();
@@ -111,11 +121,138 @@ function validateStep1() {
     return true;
 }
 
-// 驗證步驟3（其實是準備前往步驟4）
-// 此函數在原始碼中只用於調用nextStep(3)後，無實際驗證邏輯，故維持簡化
-function validateStep3() {
-    return true; 
+// --- 新增：穴道測驗相關邏輯 ---
+
+// 穴道資料
+const ACUPRESSURE_POINTS_DATA = [
+    { id: 'zanzhu', name: '攢竹穴', func: '幫助眼周放鬆，改善泡泡眼' },
+    { id: 'yingxiang', name: '迎香穴', func: '改善鼻塞，預防法令紋加深' },
+    { id: 'dicang', name: '地倉穴', func: '提拉嘴角，預防嘴角下垂' },
+    { id: 'jiache', name: '頰車穴', func: '放鬆咀嚼肌，修飾臉部線條' }
+];
+
+let selectedName = null;
+let selectedFunction = null;
+let correctMatches = 0;
+let quizAttempts = 0;
+
+// 洗牌函式 (Fisher-Yates Shuffle)
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
 }
+
+// 初始化測驗
+function initializeQuiz() {
+    const namesContainer = document.getElementById('quiz-names');
+    const functionsContainer = document.getElementById('quiz-functions');
+    const statusEl = document.getElementById('quiz-status');
+    const nextBtn = document.getElementById('btn-step4-next');
+    
+    // 如果已經完成，就不重新初始化
+    if (fullData.quizResult.completed) return;
+
+    namesContainer.innerHTML = '';
+    functionsContainer.innerHTML = '';
+    statusEl.textContent = '請開始配對！';
+    nextBtn.disabled = true;
+
+    correctMatches = 0;
+    quizAttempts = 0;
+    fullData.quizResult.attempts = 0;
+
+    const functions = ACUPRESSURE_POINTS_DATA.map(p => ({ ...p }));
+    shuffleArray(functions);
+
+    ACUPRESSURE_POINTS_DATA.forEach(point => {
+        const nameEl = document.createElement('div');
+        nameEl.className = 'quiz-item';
+        nameEl.textContent = point.name;
+        nameEl.dataset.id = point.id;
+        nameEl.addEventListener('click', () => handleQuizItemClick(nameEl, 'name'));
+        namesContainer.appendChild(nameEl);
+    });
+
+    functions.forEach(point => {
+        const funcEl = document.createElement('div');
+        funcEl.className = 'quiz-item';
+        funcEl.textContent = point.func;
+        funcEl.dataset.id = point.id;
+        funcEl.addEventListener('click', () => handleQuizItemClick(funcEl, 'function'));
+        functionsContainer.appendChild(funcEl);
+    });
+}
+
+// 處理測驗項目點擊
+function handleQuizItemClick(element, type) {
+    if (element.classList.contains('correct')) return;
+
+    const statusEl = document.getElementById('quiz-status');
+    statusEl.textContent = '請繼續配對...';
+
+    if (type === 'name') {
+        if (selectedName) selectedName.classList.remove('selected');
+        selectedName = element;
+        selectedName.classList.add('selected');
+    } else {
+        if (selectedFunction) selectedFunction.classList.remove('selected');
+        selectedFunction = element;
+        selectedFunction.classList.add('selected');
+    }
+
+    if (selectedName && selectedFunction) {
+        quizAttempts++;
+        fullData.quizResult.attempts = quizAttempts;
+        checkMatch();
+    }
+}
+
+// 檢查配對
+function checkMatch() {
+    if (selectedName.dataset.id === selectedFunction.dataset.id) {
+        // Correct match
+        selectedName.classList.remove('selected');
+        selectedFunction.classList.remove('selected');
+        selectedName.classList.add('correct');
+        selectedFunction.classList.add('correct');
+        selectedName.style.pointerEvents = 'none';
+        selectedFunction.style.pointerEvents = 'none';
+        
+        correctMatches++;
+        document.getElementById('quiz-status').textContent = '配對成功！';
+
+        if (correctMatches === ACUPRESSURE_POINTS_DATA.length) {
+            document.getElementById('quiz-status').textContent = `🎉 恭喜！全部配對成功！您總共嘗試了 ${quizAttempts} 次。`;
+            document.getElementById('btn-step4-next').disabled = false;
+            fullData.quizResult.completed = true;
+        }
+    } else {
+        // Incorrect match
+        selectedName.classList.add('incorrect');
+        selectedFunction.classList.add('incorrect');
+        document.getElementById('quiz-status').textContent = '配對錯誤，請再試一次！';
+
+        setTimeout(() => {
+            selectedName.classList.remove('incorrect', 'selected');
+            selectedFunction.classList.remove('incorrect', 'selected');
+            selectedName = null;
+            selectedFunction = null;
+        }, 800);
+    }
+
+    // Reset selection after a short delay for correct matches too
+    if (selectedName && selectedFunction && selectedName.dataset.id === selectedFunction.dataset.id) {
+        setTimeout(() => {
+            selectedName = null;
+            selectedFunction = null;
+        }, 200);
+    }
+}
+
+
+// --- 既有函式 (維持不變) ---
 
 // 膚質分析核心邏輯
 function analyzeSkinType() {
@@ -338,10 +475,8 @@ function analyzeWaterTemperature(preference) {
             };
             break;
         case 'warm':
-            // For warm water, we don't need to show a warning. We can return empty strings.
-            // The generateResultsHTMLContent function will check for `waterAdvice.warning` and not render the section if it's empty.
             result = {
-                warning: '', // No warning needed for the correct preference
+                warning: '',
                 impact: '',
                 suggestion: ''
             };
@@ -395,10 +530,6 @@ function getWashingSteps() {
 
 
 // 分析並顯示結果
-// 此函數維持原專案結構，確保分析結果儲存到fullData中
-// 由於專案中的analyzeLifestyleImpact, analyzeAcne, getCleansingAdvice, analyzeWaterTemperature, getAcupressurePoints, getWashingSteps都是佔位，或很簡潔，
-// 為了避免過長，我在此處簡化了這些函數的定義。
-// 實際專案中這些函數可能包含複雜邏輯，但為了確保replace的精確性及避免stack overflow，此處只包含核心邏輯。
 function analyzeAndShowResults() {
     const requiredFields = ['tzone', 'cheeks', 'forehead', 'nose', 'acne', 'water', 'afterWash'];
     for (let field of requiredFields) {
@@ -580,14 +711,13 @@ function saveActionPlanData() {
 
 function completeAndExport() {
     if (saveActionPlanData()) {
-        nextStep(5);
+        nextStep(6); // Adjusted for new step
     }
 }
 
 function prepareInitialPayload() {
-    const { basicInfo, selfReflection, skinAssessment, lifestyle, analysisResult, actionPlan } = fullData;
+    const { basicInfo, selfReflection, skinAssessment, lifestyle, analysisResult, quizResult, actionPlan } = fullData;
     
-    // Flatten actionPlan.actions array into individual action1-action5 fields
     const actions = Array.isArray(actionPlan.actions) ? actionPlan.actions : [];
 
     return {
@@ -625,6 +755,8 @@ function prepareInitialPayload() {
         skinType: analysisResult.skinAnalysis ? analysisResult.skinAnalysis.skinType : '',
         oilyScore: analysisResult.skinAnalysis ? analysisResult.skinAnalysis.oilyScore : 0,
         dryScore: analysisResult.skinAnalysis ? analysisResult.skinAnalysis.dryScore : 0,
+
+        quizAttempts: quizResult.attempts || 0, // 新增測驗嘗試次數
 
         cognitionChange: actionPlan.cognitionChange || '',
         habitImpact: actionPlan.habitImpact || '',
@@ -776,7 +908,7 @@ function loadSavedReport() {
                 if (!data.basicInfo.seatNumber) data.basicInfo.seatNumber = '未知座號';
                 fullData = data;
                 displayPreviousReport();
-                nextStep(6);
+                nextStep(7); // Adjusted for new step
             } catch (error) {
                 alert('檔案格式錯誤，請選擇正確的報告檔案。');
             }
@@ -787,7 +919,7 @@ function loadSavedReport() {
 }
 
 function displayPreviousReport() {
-    const { basicInfo, actionPlan } = fullData; // Removed selfReflection, analysisResult to simplify template for display
+    const { basicInfo, actionPlan } = fullData; 
     document.getElementById('previousReport').innerHTML = `
         <div class="result-section">
             <h3>📋 兩週前的基本資料</h3>
@@ -825,15 +957,14 @@ function saveTwoWeekReviewData() {
 }
 
 function prepareFinalPayload() {
-    // This creates the payload for the final submission
-    const initialPayload = prepareInitialPayload(); // Get the base initial data
+    const initialPayload = prepareInitialPayload(); 
     const { twoWeekReview } = fullData;
 
     const finalPayload = {
         ...initialPayload, 
-        ...twoWeekReview, // Add twoWeekReview data
-        isFinalSubmission: true, // Mark as final submission
-        submissionTimestamp: new Date().toISOString() // Update timestamp to final submission time
+        ...twoWeekReview, 
+        isFinalSubmission: true, 
+        submissionTimestamp: new Date().toISOString()
     };
     return finalPayload;
 }
@@ -1105,17 +1236,28 @@ document.addEventListener('DOMContentLoaded', function() {
         btnStep3Next.addEventListener('click', () => nextStep(4));
     }
     
+    // New Quiz Step Buttons
     const btnStep4Prev = document.getElementById('btn-step4-prev');
     if (btnStep4Prev) {
         btnStep4Prev.addEventListener('click', () => prevStep(3));
+    }
+    const btnStep4Next = document.getElementById('btn-step4-next');
+    if (btnStep4Next) {
+        btnStep4Next.addEventListener('click', () => nextStep(5));
+    }
+    
+    // Renumbered Action Plan Step Buttons
+    const btnStep5Prev = document.getElementById('btn-step5-prev');
+    if (btnStep5Prev) {
+        btnStep5Prev.addEventListener('click', () => prevStep(4));
     }
 
     const btnComplete = document.getElementById('btn-complete');
     if (btnComplete) {
         btnComplete.addEventListener('click', completeAndExport);
-}
+    }
 
-    // Completion page buttons
+    // Completion page (now Step 6) buttons
     const btnSubmitInitial = document.getElementById('btn-submit-initial');
     if (btnSubmitInitial) {
         btnSubmitInitial.addEventListener('click', submitInitialReport);
@@ -1141,7 +1283,7 @@ document.addEventListener('DOMContentLoaded', function() {
         btnLoadSaved.addEventListener('click', loadSavedReport);
     }
 
-    // Final submission buttons
+    // Final submission (now Step 7) buttons
     const btnSubmitFinal = document.getElementById('btn-submit-final');
     if (btnSubmitFinal) {
         btnSubmitFinal.addEventListener('click', submitFinalReport);
