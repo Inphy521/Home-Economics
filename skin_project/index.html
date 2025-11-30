@@ -91,7 +91,7 @@
                 </div>
             </div>
 
-            <button class="btn-primary" onclick="nextStep(2)">下一步 →</button>
+            <button id="btn-step1-next" class="btn-primary">下一步 →</button>
         </div>
 
         <!-- 第二步：膚質問卷 + 生活習慣 -->
@@ -405,8 +405,8 @@
             </div>
 
             <div class="button-group">
-                <button class="btn-secondary" onclick="prevStep(1)">← 上一步</button>
-                <button class="btn-primary" onclick="analyzeAndShowResults()">查看分析結果 →</button>
+                <button id="btn-step2-prev" class="btn-secondary">← 上一步</button>
+                <button id="btn-analyze" class="btn-primary">查看分析結果 →</button>
             </div>
         </div>
 
@@ -414,7 +414,7 @@
         <div id="step3" class="form-step">
             <div id="results"></div>
             <div class="button-group">
-                <button class="btn-primary" onclick="nextStep(4)">下一步：制定行動計畫 →</button>
+                <button id="btn-step3-next" class="btn-primary">下一步：制定行動計畫 →</button>
             </div>
         </div>
 
@@ -490,8 +490,8 @@
             </div>
 
             <div class="button-group">
-                <button class="btn-secondary" onclick="prevStep(3)">← 上一步</button>
-                <button class="btn-primary" onclick="completeAndExport()">完成並匯出報告 📄</button>
+                <button id="btn-step4-prev" class="btn-secondary">← 上一步</button>
+                <button id="btn-complete" class="btn-primary">完成並前往提交頁面 📄</button>
             </div>
         </div>
 
@@ -503,17 +503,17 @@
                 <p>您的個人報告已經準備好了</p>
 
                 <div class="export-options">
-                    <button class="btn-primary btn-large" onclick="submitInitialReport()">
+                    <button id="btn-submit-initial" class="btn-primary btn-large">
                         ☁️ 上傳資料到雲端
                     </button>
                     <div id="uploadStatus" style="margin-top: 15px; font-weight: bold;"></div>
 
                     <h3 style="margin-top: 30px;">📥 或下載離線報告</h3>
                     <p>請將報告檔案下載並保存，兩週後需要再次匯入檢視</p>
-                    <button class="btn-secondary btn-large" onclick="downloadReport()">
+                    <button id="btn-download-json" class="btn-secondary btn-large">
                         💾 下載個人報告 (JSON)
                     </button>
-                    <button class="btn-secondary btn-large" onclick="downloadInitialHTMLReport()">
+                    <button id="btn-download-initial-html" class="btn-secondary btn-large">
                         📄 下載完整報告 (HTML)
                     </button>
                 </div>
@@ -529,8 +529,8 @@
                 </div>
 
                 <div class="button-group" style="margin-top: 30px;">
-                    <button class="btn-secondary" onclick="resetForm()">🔄 重新開始</button>
-                    <button class="btn-primary" onclick="loadSavedReport()">📂 匯入兩週前的報告</button>
+                    <button id="btn-reset" class="btn-secondary">🔄 重新開始</button>
+                    <button id="btn-load-saved" class="btn-primary">📂 匯入兩週前的報告</button>
                 </div>
             </div>
         </div>
@@ -577,10 +577,10 @@
 
             <div id="finalUploadStatus" style="margin-top: 15px; font-weight: bold; text-align: center;"></div>
             <div class="button-group">
-                <button class="btn-primary btn-large" onclick="submitFinalReport()">
+                <button id="btn-submit-final" class="btn-primary btn-large">
                     ☁️ 上傳最終成果給老師
                 </button>
-                <button class="btn-secondary btn-large" onclick="downloadFinalHTMLReport()">
+                <button id="btn-download-final-html" class="btn-secondary btn-large">
                     📄 或下載完整HTML報告備份
                 </button>
             </div>
