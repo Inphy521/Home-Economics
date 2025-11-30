@@ -163,12 +163,235 @@ function analyzeSkinType() {
     return { skinType, skinTypeDesc, skinIcon, oilyScore, dryScore };
 }
 
-function analyzeLifestyleImpact(lifestyle) { return { issues: [], suggestions: [] }; }
-function analyzeAcne(acneLevel) { return { description: '青春痘分析佔位', causes: [], advice: [] }; }
-function getCleansingAdvice(skinType) { return { cleanser: '潔面產品佔位', frequency: '頻率佔位', water: '水溫佔位', method: '方法佔位', aftercare: '保養佔位' }; }
-function analyzeWaterTemperature(preference) { return { warning: '水溫佔位', impact: '影響佔位', suggestion: '建議佔位' }; }
-function getAcupressurePoints() { return '穴道佔位'; }
-function getWashingSteps() { return '洗臉步驟佔位'; }
+function analyzeLifestyleImpact(lifestyle) {
+    const issues = [];
+    const suggestions = [];
+
+    // 1. 飲食分析 (油炸與甜食)
+    if (lifestyle.friedFood === 'daily' || lifestyle.friedFood === 'often') {
+        issues.push('高頻率攝取油炸食物');
+        suggestions.push('油炸食物容易引發身體發炎反應，可能加劇痘痘與粉刺問題。建議將頻率降低到每週1-2次。');
+    }
+    if (lifestyle.sugar === 'daily' || lifestyle.sugar === 'often') {
+        issues.push('高頻率攝取甜食或含糖飲料');
+        suggestions.push('糖分會導致皮膚的膠原蛋白被破壞(糖化反應)，使皮膚提早老化、長皺紋，也可能刺激皮脂分泌。建議減少含糖飲料，改喝水或無糖茶。');
+    }
+
+    // 2. 蔬果攝取分析
+    if (lifestyle.vegetables === 'sometimes' || lifestyle.vegetables === 'rare') {
+        issues.push('蔬菜水果攝取不足');
+        suggestions.push('蔬果富含維生素C、E及多種抗氧化物，能幫助皮膚對抗自由基，維持健康與亮澤。請 চেষ্টা (try to) 增加每日的蔬果攝取量。');
+    }
+
+    // 3. 飲水習慣分析
+    if (lifestyle.waterIntake === 'low') {
+        issues.push('每日喝水量可能不足');
+        suggestions.push('皮膚缺水時，會顯得乾燥、無光澤，甚至更容易出油來彌補。建議每日至少喝1500ml的水，分次慢慢喝。');
+    }
+    if (lifestyle.waterType === 'no') {
+        issues.push('主要飲品來源為飲料而非白開水');
+        suggestions.push('多數飲料含糖量高，對皮膚弊大於利。建立喝白開水的習慣是擁有好皮膚的基礎。');
+    }
+
+    // 4. 睡眠習慣分析
+    if (lifestyle.sleepHours === 'low') {
+        issues.push('睡眠時間不足');
+        suggestions.push('睡眠是皮膚自我修復最重要的時間。長期睡眠不足會影響新陳代謝，導致黑眼圈、皮膚暗沉、老化加速。建議每日睡足7-8小時。');
+    }
+    if (lifestyle.sleepTime === 'late' || lifestyle.sleepTime === 'veryLate') {
+        issues.push('就寢時間過晚');
+        suggestions.push('人體器官有其休息排毒時間，晚上11點到凌晨3點是肝膽排毒、皮膚修復的黃金時段。建議盡量在11點前就寢。');
+    }
+
+    // 5. 運動習慣分析
+    if (lifestyle.exercise === 'rare') {
+        issues.push('缺乏規律運動');
+        suggestions.push('適度運動能促進血液循環，增加皮膚細胞的氧氣與養分供給，並透過排汗幫助毛孔暢通。建議從每週1-2次健走或慢跑開始。');
+    }
+
+    return { issues, suggestions };
+}
+function analyzeAcne(acneLevel) {
+    let description = '';
+    let causes = [];
+    let advice = [];
+
+    switch (acneLevel) {
+        case 'severe':
+            description = '您似乎經常受到青春痘的困擾。';
+            causes = [
+                '皮脂腺分泌過度旺盛',
+                '毛孔堵塞，清潔不當',
+                '痤瘡桿菌增生',
+                '飲食、作息、壓力等內分泌影響'
+            ];
+            advice = [
+                '請務必使用溫和的潔面產品，避免過度清潔造成皮膚刺激。',
+                '洗臉後應使用清爽、不致痘的保濕產品，維持油水平衡。',
+                '避免用手觸摸或擠壓痘痘，以免發炎或留下疤痕。',
+                '建議尋求專業皮膚科醫師的協助，找出根本原因並進行治療。'
+            ];
+            break;
+        case 'occasional':
+            description = '您偶爾會有青春痘的問題。';
+            causes = [
+                '可能與特定時期的壓力、作息改變有關',
+                '生理期前後的荷爾蒙波動',
+                '特定飲食（如高糖、高油）的影響',
+                '使用了不適合的保養品或化妝品'
+            ];
+            advice = [
+                '觀察痘痘通常在什麼情況下出現，嘗試找出並避免觸發因子。',
+                '長痘期間可局部使用有鎮靜、抗發炎效果的保養品。',
+                '確保枕頭套、毛巾等個人用品的清潔。',
+                '如果狀況變嚴重，建議諮詢專業意見。'
+            ];
+            break;
+        case 'rare':
+            description = '您的皮膚狀況相對穩定，很少長痘。';
+            causes = [];
+            advice = [
+                '恭喜！請繼續維持良好的清潔與保養習慣。',
+                '即使不長痘，也要注意日常的保濕與防曬，預防皮膚老化。',
+                '當生活習慣改變或壓力變大時，仍需留意皮膚狀況的變化。'
+            ];
+            break;
+        default:
+            description = '沒有關於青春痘狀況的資料。';
+            advice = ['請完成問卷以獲得分析。'];
+            break;
+    }
+
+    return { description, causes, advice };
+}
+function getCleansingAdvice(skinType) {
+    let advice = {
+        cleanser: '資料不足',
+        frequency: '資料不足',
+        water: '資料不足',
+        method: '資料不足',
+        aftercare: '資料不足'
+    };
+
+    switch (skinType) {
+        case '油性肌膚':
+            advice = {
+                cleanser: '選擇有控油效果、質地清爽的潔面乳或凝膠，可含有溫和的酸類成分(如水楊酸)幫助代謝角質。',
+                frequency: '早晚各洗一次臉即可。過度清潔會刺激皮脂腺分泌更多油脂。',
+                water: '使用比體溫略低的溫水(約30-34°C)。過熱的水會洗掉過多皮脂，過冷則不易洗淨油脂。',
+                method: '先將潔面乳在手中充分起泡，用指腹輕柔地在臉上畫圈按摩，特別是T字部位，最後用大量清水沖淨。',
+                aftercare: '洗臉後立即使用清爽型的化妝水和無油乳液或凝露來保濕，維持油水平衡。'
+            };
+            break;
+        case '乾性肌膚':
+            advice = {
+                cleanser: '選擇溫和、保濕、不起泡或微泡的潔面乳霜或乳液，避免使用清潔力過強的產品。',
+                frequency: '晚上確實清潔即可，早上若無出油感，可用清水洗臉。',
+                water: '使用微涼的溫水(約25-30°C)。避免使用熱水，以免洗去保護皮膚的必要油脂。',
+                method: '輕柔地按摩臉部，避免過度摩擦。確認潔面產品完全沖洗乾淨，無殘留。',
+                aftercare: '洗臉後是保養的黃金時間！立即使用保濕化妝水，並擦上含油份的乳霜或精華油來鎖住水分。'
+            };
+            break;
+        case '混合性肌膚':
+            advice = {
+                cleanser: '選擇溫和的潔面產品。可以分區保養，T字部位可偶爾使用含控油成分的產品。',
+                frequency: '早晚各洗一次臉。出油的T字部位可以加強清潔，乾燥的兩頰則輕柔帶過。',
+                water: '使用微涼的溫水，對各種膚況都最為溫和。',
+                method: '將泡沫主要集中在T字部位，兩頰輕輕帶過即可，避免過度搓揉乾燥的區域。',
+                aftercare: '分區保養是關鍵！T字部位使用清爽型保濕，兩頰則使用較滋潤的乳液或乳霜。'
+            };
+            break;
+        case '中性肌膚':
+            advice = {
+                cleanser: '恭喜擁有健康的膚質！選擇任何溫和型的潔面產品皆可。',
+                frequency: '早晚各洗一次臉，維持良好習慣。',
+                water: '溫水或微涼水皆可，主要以舒適為主。',
+                method: '用指腹輕柔畫圈按摩全臉，並用清水徹底沖淨。',
+                aftercare: '洗臉後使用基礎的保濕乳液，維持皮膚的穩定狀態。並根據季節變化微調保養品。'
+            };
+            break;
+    }
+    return advice;
+}
+function analyzeWaterTemperature(preference) {
+    let result = {
+        warning: '',
+        impact: '',
+        suggestion: ''
+    };
+
+    switch (preference) {
+        case 'hot':
+            result = {
+                warning: '⚠️ 您偏好使用熱水洗臉',
+                impact: `雖然熱水洗臉感覺很舒服，但過高的水溫會過度洗去保護皮膚的必要油脂，破壞皮脂膜的健康。
+這會導致皮膚鎖水能力下降，變得更乾、更敏感，甚至刺激皮脂腺分泌更多油脂，造成「越洗越油」的惡性循環。`,
+                suggestion: '為了皮膚健康，建議將水溫調整為與體溫相近或略低的「溫水」。'
+            };
+            break;
+        case 'cold':
+            result = {
+                warning: '🧊 您偏好使用冷水洗臉',
+                impact: `用冷水洗臉雖然能讓毛孔暫時收縮，感覺清爽，但對於清潔臉上已經分泌的油脂和髒污效果較差。
+如果潔面產品沒有完全乳化或沖洗乾淨，殘留物反而可能堵塞毛孔，引發粉刺問題。`,
+                suggestion: '溫水是幫助毛孔適度張開、有效清潔並帶走髒污的最好選擇。'
+            };
+            break;
+        case 'warm':
+            // For warm water, we don't need to show a warning. We can return empty strings.
+            // The generateResultsHTMLContent function will check for `waterAdvice.warning` and not render the section if it's empty.
+            result = {
+                warning: '', // No warning needed for the correct preference
+                impact: '',
+                suggestion: ''
+            };
+            break;
+    }
+    return result;
+}
+function getAcupressurePoints() {
+    return `
+        <div class="result-section">
+            <h3>💆 臉部穴道按摩</h3>
+            <p>每天花幾分鐘按摩臉部穴道，可以促進血液循環，改善氣色，幫助放鬆。可在洗臉或保養時進行。</p>
+            <div class="advice-grid">
+                <div class="advice-item">
+                    <h4>攢竹穴</h4>
+                    <p>位置：眉頭內側邊緣的凹陷處。<br>功效：幫助眼周放鬆，改善泡泡眼。</p>
+                </div>
+                <div class="advice-item">
+                    <h4>迎香穴</h4>
+                    <p>位置：鼻翼外緣中點，與法令紋的交會處。<br>功效：改善鼻塞，預防法令紋加深。</p>
+                </div>
+                <div class="advice-item">
+                    <h4>地倉穴</h4>
+                    <p>位置：嘴角外側，與瞳孔的垂直線交會處。<br>功效：提拉嘴角，預防嘴角下垂。</p>
+                </div>
+                 <div class="advice-item">
+                    <h4>頰車穴</h4>
+                    <p>位置：下顎角前上方約一橫指處，用力咬牙時，咀嚼肌隆起處。<br>功效：放鬆咀嚼肌，修飾臉部線條。</p>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function getWashingSteps() {
+    return `
+        <div class="result-section">
+            <h3>📖 正確洗臉七步驟</h3>
+            <ol class="tips-list">
+                <li><strong>濕潤臉部：</strong>先用溫水將臉部打濕。</li>
+                <li><strong>起泡完全：</strong>取適量潔面產品於掌心，加水搓揉出豐富泡沫。</li>
+                <li><strong>分區清潔：</strong>將泡沫先塗抹於T字部位(額頭、鼻子)，輕柔畫圈按摩。</li>
+                <li><strong>帶到全臉：</strong>再將泡沫帶到臉頰、下巴等部位，同樣輕柔按摩。</li>
+                <li><strong>徹底沖淨：</strong>用大量流動的溫水將泡沫完全沖洗乾淨，特別注意髮際線、下巴及鼻翼兩側。</li>
+                <li><strong>溫和拭乾：</strong>使用乾淨的毛巾或面紙，用「按壓」的方式將臉上水分吸乾，避免來回摩擦。</li>
+                <li><strong>立即保養：</strong>趁臉部還保有濕潤感時，立即進行後續的化妝水、乳液等保養程序。</li>
+            </ol>
+        </div>
+    `;
+}
 
 
 // 分析並顯示結果
