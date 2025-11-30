@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>臉部膚質分析系統 - 教學版</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌸 臉部膚質智能分析系統</h1>
+            <p class="subtitle">了解你的肌膚，從正確清潔開始</p>
+        </header>
+
+        <!-- 步驟指示器 -->
+        <div class="progress-bar">
+            <div class="step active" data-step="1">
+                <div class="step-number">1</div>
+                <div class="step-label">自我認知</div>
+            </div>
+            <div class="step" data-step="2">
+                <div class="step-number">2</div>
+                <div class="step-label">膚質評估</div>
+            </div>
+            <div class="step" data-step="3">
+                <div class="step-number">3</div>
+                <div class="step-label">分析報告</div>
+            </div>
+            <div class="step" data-step="4">
+                <div class="step-number">4</div>
+                <div class="step-label">行動計畫</div>
+            </div>
+        </div>
+
+        <!-- 第一步：基本資訊 + 自我期待 -->
+        <div id="step1" class="form-step active">
+            <h2>📝 基本資訊與自我認知</h2>
+
+            <div class="form-group">
+                <label for="className">班級（例如：701）：<span class="required">*</span></label>
+                <input type="text" id="className" placeholder="請輸入您的班級" required>
+            </div>
+            <div class="form-group">
+                <label for="seatNumber">座號（例如：5）：<span class="required">*</span></label>
+                <input type="number" id="seatNumber" placeholder="請輸入您的座號" required>
+            </div>
+            <div class="form-group">
+                <label for="studentName">姓名（必填）：<span class="required">*</span></label>
+                <input type="text" id="studentName" placeholder="請輸入您的姓名" required>
+            </div>
+
+            <div class="form-group">
+                <label for="studentId">學號（選填）：</label>
+                <input type="text" id="studentId" placeholder="請輸入您的學號">
+            </div>
+
+            <div class="form-group">
+                <label for="age">年齡範圍：<span class="required">*</span></label>
+                <select id="age" required>
+                    <option value="">請選擇</option>
+                    <option value="teen">12-18歲</option>
+                    <option value="young">19-25歲</option>
+                    <option value="adult">26-35歲</option>
+                    <option value="mature">36歲以上</option>
+                </select>
+            </div>
+
+            <div class="reflection-section">
+                <h3>💭 自我期待與想像</h3>
+                <p class="instruction">在開始評估之前，請先思考並寫下您的想法（這些內容將供教師評分參考）：</p>
+
+                <div class="form-group">
+                    <label for="selfImage">1. 您對自己目前膚質的看法是什麼？<span class="required">*</span></label>
+                    <textarea id="selfImage" rows="3" placeholder="例如：我覺得自己的皮膚容易出油，尤其是鼻子和額頭..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="idealSkin">2. 您期待擁有怎樣的膚質？<span class="required">*</span></label>
+                    <textarea id="idealSkin" rows="3" placeholder="例如：我希望皮膚能更細緻、毛孔更小、不要那麼油..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="impression">3. 您希望透過良好的膚質帶給別人怎樣的印象？<span class="required">*</span></label>
+                    <textarea id="impression" rows="3" placeholder="例如：我希望看起來乾淨清爽、有精神、給人健康的感覺..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="currentCare">4. 您目前的保養習慣是什麼？<span class="required">*</span></label>
+                    <textarea id="currentCare" rows="3" placeholder="例如：每天早晚洗臉，偶爾會用化妝水，但不太規律..." required></textarea>
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="nextStep(2)">下一步 →</button>
+        </div>
+
+        <!-- 第二步：膚質問卷 + 生活習慣 -->
+        <div id="step2" class="form-step">
+            <h2>🔍 膚質評估與生活習慣</h2>
+
+            <div class="section-title">
+                <h3>臉部膚質狀況</h3>
+            </div>
+
+            <div class="question-card">
+                <h3>T字部位（額頭、鼻子）</h3>
+                <div class="radio-group">
+                    <label class="radio-card">
+                        <input type="radio" name="tzone" value="oily">
+                        <span class="radio-content">
+                            <span class="radio-title">💧 油膩</span>
+                            <span class="radio-desc">容易出油、有光澤</span>
+                        </span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="tzone" value="dry">
+                        <span class="radio-content">
+                            <span class="radio-title">🏜️ 乾燥</span>
+                            <span class="radio-desc">緊繃、脫皮</span>
+                        </span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="tzone" value="normal">
+                        <span class="radio-content">
+                            <span class="radio-title">✨ 正常</span>
+                            <span class="radio-desc">不乾不油、舒適</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <h3>兩頰</h3>
+                <div class="radio-group">
+                    <label class="radio-card">
+                        <input type="radio" name="cheeks" value="oily">
+                        <span class="radio-content">
+                            <span class="radio-title">💧 油膩</span>
+                            <span class="radio-desc">容易出油、毛孔明顯</span>
+                        </span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="cheeks" value="dry">
+                        <span class="radio-content">
+                            <span class="radio-title">🏜️ 乾燥</span>
+                            <span class="radio-desc">粗糙、緊繃</span>
+                        </span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="cheeks" value="normal">
+                        <span class="radio-content">
+                            <span class="radio-title">✨ 正常</span>
+                            <span class="radio-desc">細緻、平滑</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <h3>額頭</h3>
+                <div class="radio-group">
+                    <label class="radio-card">
+                        <input type="radio" name="forehead" value="oily">
+                        <span class="radio-content">
+                            <span class="radio-title">💧 油膩</span>
+                            <span class="radio-desc">經常油亮</span>
+                        </span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="forehead" value="dry">
+                        <span class="radio-content">
+                            <span class="radio-title">🏜️ 乾燥</span>
+                            <span class="radio-desc">乾澀、脫屑</span>
+                        </span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="forehead" value="normal">
+                        <span class="radio-content">
+                            <span class="radio-title">✨ 正常</span>
+                            <span class="radio-desc">油水平衡</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <h3>鼻頭</h3>
+                <div class="radio-group">
+                    <label class="radio-card">
+                        <input type="radio" name="nose" value="oily">
+                        <span class="radio-content">
+                            <span class="radio-title">💧 油膩</span>
+                            <span class="radio-desc">毛孔粗大、黑頭</span>
+                        </span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="nose" value="dry">
+                        <span class="radio-content">
+                            <span class="radio-title">🏜️ 乾燥</span>
+                            <span class="radio-desc">乾燥脫皮</span>
+                        </span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="nose" value="normal">
+                        <span class="radio-content">
+                            <span class="radio-title">✨ 正常</span>
+                            <span class="radio-desc">毛孔細緻</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <h3>是否有青春痘問題？</h3>
+                <div class="radio-group">
+                    <label class="radio-card">
+                        <input type="radio" name="acne" value="severe">
+                        <span class="radio-content">
+                            <span class="radio-title">😰 經常長痘</span>
+                            <span class="radio-desc">常常有多顆痘痘</span>
+                        </span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="acne" value="occasional">
+                        <span class="radio-content">
+                            <span class="radio-title">😐 偶爾長痘</span>
+                            <span class="radio-desc">偶爾會冒出痘痘</span>
+                        </span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="acne" value="rare">
+                        <span class="radio-content">
+                            <span class="radio-title">😊 很少長痘</span>
+                            <span class="radio-desc">幾乎不長痘痘</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <h3>洗臉水溫偏好</h3>
+                <div class="radio-group">
+                    <label class="radio-card">
+                        <input type="radio" name="water" value="hot">
+                        <span class="radio-content">
+                            <span class="radio-title">🔥 熱水</span>
+                            <span class="radio-desc">喜歡用熱水洗臉</span>
+                        </span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="water" value="cold">
+                        <span class="radio-content">
+                            <span class="radio-title">❄️ 冷水</span>
+                            <span class="radio-desc">喜歡用冷水洗臉</span>
+                        </span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="water" value="warm">
+                        <span class="radio-content">
+                            <span class="radio-title">🌡️ 溫水</span>
+                            <span class="radio-desc">使用溫水洗臉</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <h3>洗臉後的感覺</h3>
+                <div class="radio-group">
+                    <label class="radio-card">
+                        <input type="radio" name="afterWash" value="tight">
+                        <span class="radio-content">
+                            <span class="radio-title">😣 緊繃</span>
+                            <span class="radio-desc">感覺很緊繃、不舒服</span>
+                        </span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="afterWash" value="oily">
+                        <span class="radio-content">
+                            <span class="radio-title">😅 很快出油</span>
+                            <span class="radio-desc">1-2小時就出油</span>
+                        </span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="afterWash" value="comfortable">
+                        <span class="radio-content">
+                            <span class="radio-title">😊 舒適</span>
+                            <span class="radio-desc">清爽舒適、不緊繃</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="section-title">
+                <h3>生活習慣評估</h3>
+                <p class="section-desc">以下習慣都會影響您的膚質狀況</p>
+            </div>
+
+            <div class="question-card">
+                <h3>🍽️ 飲食習慣</h3>
+                <div class="form-group">
+                    <label>請描述您平常的飲食內容：<span class="required">*</span></label>
+                    <textarea id="dietContent" rows="3" placeholder="例如：早餐通常吃麵包和牛奶，午餐在學校吃便當，晚餐在家吃..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>油炸食物攝取頻率：</label>
+                    <select id="friedFood">
+                        <option value="">請選擇</option>
+                        <option value="daily">幾乎每天</option>
+                        <option value="often">每週3-5次</option>
+                        <option value="sometimes">每週1-2次</option>
+                        <option value="rare">很少吃</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>甜食及含糖飲料攝取頻率：</label>
+                    <select id="sugar">
+                        <option value="">請選擇</option>
+                        <option value="daily">幾乎每天</option>
+                        <option value="often">每週3-5次</option>
+                        <option value="sometimes">每週1-2次</option>
+                        <option value="rare">很少吃</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>蔬菜水果攝取頻率：</label>
+                    <select id="vegetables">
+                        <option value="">請選擇</option>
+                        <option value="daily">每天都吃</option>
+                        <option value="often">每週5-6天</option>
+                        <option value="sometimes">每週3-4天</option>
+                        <option value="rare">很少吃</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <h3>💧 喝水習慣</h3>
+                <div class="form-group">
+                    <label>平均每天喝水量（包含湯、飲料等液體）：<span class="required">*</span></label>
+                    <select id="waterIntake" required>
+                        <option value="">請選擇</option>
+                        <option value="low">少於1000ml（約4杯以下）</option>
+                        <option value="medium">1000-1500ml（約4-6杯）</option>
+                        <option value="good">1500-2000ml（約6-8杯）</option>
+                        <option value="high">2000ml以上（約8杯以上）</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>是否主要喝白開水？</label>
+                    <select id="waterType">
+                        <option value="">請選擇</option>
+                        <option value="yes">是，主要喝白開水</option>
+                        <option value="mixed">白開水和飲料都有</option>
+                        <option value="no">不，主要喝飲料</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <h3>😴 睡眠習慣</h3>
+                <div class="form-group">
+                    <label>平均每天睡眠時間：<span class="required">*</span></label>
+                    <select id="sleepHours" required>
+                        <option value="">請選擇</option>
+                        <option value="low">少於6小時</option>
+                        <option value="medium">6-7小時</option>
+                        <option value="good">7-8小時</option>
+                        <option value="high">8小時以上</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>通常幾點睡覺？<span class="required">*</span></label>
+                    <select id="sleepTime" required>
+                        <option value="">請選擇</option>
+                        <option value="early">晚上10點前</option>
+                        <option value="normal">晚上10-11點</option>
+                        <option value="late">晚上11點-12點</option>
+                        <option value="veryLate">凌晨12點後</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>睡眠品質如何？</label>
+                    <select id="sleepQuality">
+                        <option value="">請選擇</option>
+                        <option value="good">很好，一覺到天亮</option>
+                        <option value="normal">普通，偶爾會醒來</option>
+                        <option value="poor">不好，經常睡不好</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <h3>🏃 運動習慣</h3>
+                <div class="form-group">
+                    <label>運動頻率：</label>
+                    <select id="exercise">
+                        <option value="">請選擇</option>
+                        <option value="daily">幾乎每天</option>
+                        <option value="often">每週3-5次</option>
+                        <option value="sometimes">每週1-2次</option>
+                        <option value="rare">很少運動</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-secondary" onclick="prevStep(1)">← 上一步</button>
+                <button class="btn-primary" onclick="analyzeAndShowResults()">查看分析結果 →</button>
+            </div>
+        </div>
+
+        <!-- 第三步：分析結果 -->
+        <div id="step3" class="form-step">
+            <div id="results"></div>
+            <div class="button-group">
+                <button class="btn-primary" onclick="nextStep(4)">下一步：制定行動計畫 →</button>
+            </div>
+        </div>
+
+        <!-- 第四步：後設認知反思與行動計畫 -->
+        <div id="step4" class="form-step">
+            <h2>🎯 後設認知反思與行動計畫</h2>
+
+            <div class="reflection-section">
+                <div class="info-box">
+                    <h3>📖 什麼是後設認知？</h3>
+                    <p>後設認知就是「對自己思考的思考」，也就是了解自己的學習過程、反思自己的行為，並規劃改進的方法。</p>
+                </div>
+
+                <h3>💭 對照與反思</h3>
+
+                <div class="form-group">
+                    <label>1. 看完分析結果後，您對自己膚質的認知有什麼改變嗎？<span class="required">*</span></label>
+                    <textarea id="cognitionChange" rows="4" placeholder="例如：我原本以為自己是油性肌膚，但分析後發現是混合性，T字部位才會出油..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>2. 您認為哪些生活習慣可能影響了您的膚質？<span class="required">*</span></label>
+                    <textarea id="habitImpact" rows="4" placeholder="例如：我發現自己睡太晚、水喝太少、常吃炸物，這些都可能讓皮膚變差..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>3. 看完洗臉步驟和穴道介紹後，您之前的做法有哪些需要改進？<span class="required">*</span></label>
+                    <textarea id="improvements" rows="4" placeholder="例如：我以前都用熱水洗臉，而且洗得太快，沒有按摩足夠的時間..." required></textarea>
+                </div>
+
+                <h3>📝 兩週行動計畫</h3>
+                <p class="instruction">請寫下您在接下來兩週內，能夠確實做到的<strong>五件事</strong>，來改善您的膚質。請具體且實際，不要寫太困難的目標。</p>
+
+                <div class="action-items">
+                    <div class="form-group">
+                        <label>行動 1：<span class="required">*</span></label>
+                        <input type="text" id="action1" placeholder="例如：每天至少喝6杯水（約1500ml）" required>
+                    </div>
+                    <div class="form-group">
+                        <label>行動 2：<span class="required">*</span></label>
+                        <input type="text" id="action2" placeholder="例如：改用溫水洗臉，不再用熱水" required>
+                    </div>
+                    <div class="form-group">
+                        <label>行動 3：<span class="required">*</span></label>
+                        <input type="text" id="action3" placeholder="例如：每週最多吃2次油炸食物" required>
+                    </div>
+                    <div class="form-group">
+                        <label>行動 4：<span class="required">*</span></label>
+                        <input type="text" id="action4" placeholder="例如：晚上11點前上床睡覺" required>
+                    </div>
+                    <div class="form-group">
+                        <label>行動 5：<span class="required">*</span></label>
+                        <input type="text" id="action5" placeholder="例如：每天按摩臉部穴道2分鐘" required>
+                    </div>
+                </div>
+
+                <h3>🔮 兩週後的檢視</h3>
+
+                <div class="form-group">
+                    <label>兩週後，您預期自己的膚質會有什麼改變？</label>
+                    <textarea id="expectation" rows="3" placeholder="例如：我希望T字部位不要那麼油、痘痘減少、皮膚看起來更有光澤..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>您覺得執行這五個行動的困難度如何？</label>
+                    <select id="difficulty">
+                        <option value="">請選擇</option>
+                        <option value="easy">容易，我有信心做到</option>
+                        <option value="medium">普通，需要努力但應該可以</option>
+                        <option value="hard">困難，但我會盡力嘗試</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-secondary" onclick="prevStep(3)">← 上一步</button>
+                <button class="btn-primary" onclick="completeAndExport()">完成並匯出報告 📄</button>
+            </div>
+        </div>
+
+        <!-- 完成頁面 -->
+        <div id="step5" class="form-step">
+            <div class="completion-screen">
+                <div class="success-icon">✅</div>
+                <h2>恭喜完成評估！</h2>
+                <p>您的個人報告已經準備好了</p>
+
+                <div class="export-options">
+                    <button class="btn-primary btn-large" onclick="submitInitialReport()">
+                        ☁️ 上傳資料到雲端
+                    </button>
+                    <div id="uploadStatus" style="margin-top: 15px; font-weight: bold;"></div>
+
+                    <h3 style="margin-top: 30px;">📥 或下載離線報告</h3>
+                    <p>請將報告檔案下載並保存，兩週後需要再次匯入檢視</p>
+                    <button class="btn-secondary btn-large" onclick="downloadReport()">
+                        💾 下載個人報告 (JSON)
+                    </button>
+                    <button class="btn-secondary btn-large" onclick="downloadInitialHTMLReport()">
+                        📄 下載完整報告 (HTML)
+                    </button>
+                </div>
+
+                <div class="info-box" style="margin-top: 30px;">
+                    <h4>📌 重要提醒</h4>
+                    <ul style="text-align: left; margin-left: 20px;">
+                        <li>請將下載的檔案保存在隨身碟或雲端硬碟</li>
+                        <li>兩週後需要再次開啟本系統，匯入您的報告</li>
+                        <li>屆時系統會要求您填寫執行成果</li>
+                        <li>完整的報告將作為教師評分的依據</li>
+                    </ul>
+                </div>
+
+                <div class="button-group" style="margin-top: 30px;">
+                    <button class="btn-secondary" onclick="resetForm()">🔄 重新開始</button>
+                    <button class="btn-primary" onclick="loadSavedReport()">📂 匯入兩週前的報告</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 兩週後檢視頁面 -->
+        <div id="step6" class="form-step">
+            <h2>🔍 兩週後的成果檢視</h2>
+
+            <div id="previousReport"></div>
+
+            <div class="reflection-section">
+                <h3>📊 執行成果回報</h3>
+
+                <div class="form-group">
+                    <label>1. 您實際完成了哪幾項行動？請逐一說明執行情況：<span class="required">*</span></label>
+                    <textarea id="actionResults" rows="5" placeholder="例如：行動1（喝水）：我大部分天數都有做到，大約完成了80%..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>2. 您的膚質有什麼改變？<span class="required">*</span></label>
+                    <textarea id="skinChange" rows="4" placeholder="例如：T字部位出油情況有改善，痘痘少了一些..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>3. 哪些行動對改善膚質最有幫助？<span class="required">*</span></label>
+                    <textarea id="helpfulActions" rows="4" placeholder="例如：我覺得多喝水和改用溫水洗臉最有效..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>4. 執行過程中遇到什麼困難？<span class="required">*</span></label>
+                    <textarea id="difficulties" rows="4" placeholder="例如：早睡很困難，因為功課很多..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>5. 未來您會繼續保持哪些好習慣？<span class="required">*</span></label>
+                    <textarea id="futureHabits" rows="4" placeholder="例如：我會繼續多喝水和用溫水洗臉，這兩個最容易做到..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>6. 這次的學習讓您對自我照顧有什麼新的認識？<span class="required">*</span></label>
+                    <textarea id="learning" rows="4" placeholder="例如：我學到保養皮膚不只是擦保養品，生活習慣更重要..." required></textarea>
+                </div>
+            </div>
+
+            <div id="finalUploadStatus" style="margin-top: 15px; font-weight: bold; text-align: center;"></div>
+            <div class="button-group">
+                <button class="btn-primary btn-large" onclick="submitFinalReport()">
+                    ☁️ 上傳最終成果給老師
+                </button>
+                <button class="btn-secondary btn-large" onclick="downloadFinalHTMLReport()">
+                    📄 或下載完整HTML報告備份
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>💡 本系統為教學用途，所有分析皆在本地瀏覽器執行，不會產生任何費用</p>
+        <p>建議：此分析僅供參考，如有嚴重肌膚問題請諮詢專業皮膚科醫師</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
